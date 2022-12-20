@@ -7,20 +7,22 @@
 (defstruct bst-node
   left data right)
 
-(defun bst-insert-node (data bst)
+(defun bst-insert!-node (data bst)
+  "This is a destructive procedure.  It cannot modify an initial
+nil value, however, so start with a non-nil initial bst-node."
   (cond ((null bst)
 	 (setf bst (make-bst-node :data data)))
 	((< data (bst-node-data bst))
 	 (setf (bst-node-left bst)
-	       (bst-insert-node data (bst-node-left bst))))
+	       (bst-insert!-node data (bst-node-left bst))))
 	((> data (bst-node-data bst))
 	 (setf (bst-node-right bst)
-	       (bst-insert-node data (bst-node-right bst)))))
+	       (bst-insert!-node data (bst-node-right bst)))))
   bst)
 
 (defun bst-insert-nodes (data-list bst)
   (dolist (data data-list bst)
-    (setf bst (bst-insert-node data bst))))
+    (setf bst (bst-insert!-node data bst))))
 
 (defun bst-delete!-node (data bst)
   "This is a destructive procedure."
@@ -37,7 +39,7 @@
 	       (if (and (bst-node-left bst) (bst-node-right bst))
 		   ;; Two children exist so
 		   ;; replace this data with the largest data in the
-		   left subtree
+		   ;; left subtree
 		   ;; (or the smallest data in the right subtree)
 		   ;; and recursively delete that max (or min) node.
 		   (let ((temp (bst-max (bst-node-left bst))))
@@ -94,25 +96,25 @@ specified data."
 ;; (defun bst-delete-node (data bst)
 ;;   "Procedure to delete a node:
 ;; 1. Find the node to be deleted, and retain a reference to the
-parent node as a left or right.
+;;    parent node as a left or right.
 ;; 2. If the node to be deleted is a leaf node (no children), set
-parent left or right node to null.
+;;    parent left or right node to null.
 ;; 3. If the node to be deleted has only one child, set the parent
-left or right node to this child; null the node to be deleted.
+;;    left or right node to this child; null the node to be deleted.
 ;; 4. IF the node to be deleted has two children, find and use the
-highest subtree.
+;;    highest subtree.
 ;;    a. If the highest subtree is on the left, find the max value
-and replace the data of the node to be deleted with it; then
-recursively delete that max value.
+;;       and replace the data of the node to be deleted with it; then
+;;       recursively delete that max value.
 ;;    b. If the highest subtree is on the right, find the min value
-and replace the date of the node to be deleted with it; then
-recursively delete the min value."
+;;       and replace the date of the node to be deleted with it; then
+;;       recursively delete the min value."
 ;;   (labels ((find-node-with-parent (d tr)
 ;;	     "Returns a list, the first value being the parent and the
-second value being the node to be deleted."
+;;            second value being the node to be deleted."
 ;; 	     (when (null tr)
 ;; 	       (format t "The data item ~D was not found in the search
-tree.~%" d)
+;;              tree.~%" d)
 ;; 	       (return-from bst-delete-node))
 ;; 	     (let* ((tr-l (bst-node-left tr))
 ;; 		    (tr-r (bst-node-right tr))
