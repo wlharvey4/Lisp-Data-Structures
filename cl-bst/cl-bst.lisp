@@ -1,4 +1,13 @@
-;;; -*- mode: Lisp; -*-
+;;; cl-bst.lisp - Binary Search Tree procedures in Common Lisp
+;;; Time-stamp: <2023-01-14 13:04:48 wlh>
+
+;;; Author: LOLH
+;;; Created: 2023-01-14
+;;; Version: 0.1.0
+
+;;; Commentary
+
+;;; Code:
 
 (defparameter *bst* ())
 (defparameter *bst-data*
@@ -222,3 +231,5 @@ specified data."
 		   (1+ right))))))
 
 (setf *bst* (bst-insert-nodes *bst-data* *bst*))
+
+;;; End cl-bst.lisp
