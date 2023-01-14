@@ -1,5 +1,5 @@
 ;;; cl-bst.lisp - Binary Search Tree procedures in Common Lisp
-;;; Time-stamp: <2023-01-14 13:04:48 wlh>
+;;; Time-stamp: <2023-01-14 13:07:11 wlh>
 
 ;;; Author: LOLH
 ;;; Created: 2023-01-14
@@ -9,8 +9,8 @@
 
 ;;; Code:
 
-(defparameter *bst* ())
-(defparameter *bst-data*
+(defparameter *cl-bst* ())
+(defparameter *cl-bst-data*
   '(50 25 75 10 30 60 80 5 12 28 85 29))
 
 (defstruct bst-node
@@ -47,7 +47,7 @@ nil value, however, so start with a non-nil initial bst-node."
 	      (t ; this is the node to delete
 	       (if (and (bst-node-left bst) (bst-node-right bst))
 		   ;; Two children exist so
-		   ;; replace this data with the largest data in the
+		   ;; replace this data with the largest data in they
 		   ;; left subtree
 		   ;; (or the smallest data in the right subtree)
 		   ;; and recursively delete that max (or min) node.
@@ -144,8 +144,8 @@ specified data."
 ;; 	(case num-children
 ;; 	  (0
 ;; 	   (case side
-;; 	     ("left" (setf (bst-node-left parent) nil) *bst*)
-;; 	     ("right"(setf (bst-node-right parent) nil) *bst*)))
+;; 	     ("left" (setf (bst-node-left parent) nil) *cl-bst*)
+;; 	     ("right"(setf (bst-node-right parent) nil) *cl-bst*)))
 ;; 	  (1
 ;; 	   (case side
 ;; 	     ("left"
@@ -230,6 +230,6 @@ specified data."
 		   (1+ left)
 		   (1+ right))))))
 
-(setf *bst* (bst-insert-nodes *bst-data* *bst*))
+(setf *cl-bst* (bst-insert-nodes *cl-bst-data* *cl-bst*))
 
 ;;; End cl-bst.lisp
