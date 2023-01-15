@@ -1,9 +1,9 @@
 ;;; cl-bst.lisp - Binary Search Tree procedures in Common Lisp
-;;; Time-stamp: <2023-01-14 17:05:31 minilolh3>
+;;; Time-stamp: <2023-01-15 01:44:16 wlh>
 
 ;;; Author: LOLH
 ;;; Created: 2023-01-14
-;;; Version: 0.1.1
+;;; Version: 0.1.2
 
 ;;; Commentary
 
@@ -13,6 +13,10 @@
   (:use :cl)
   (:export :*cl-bst*
 	   :*cl-bst-lt*
+	   :*cl-bst-gt*
+	   :*cl-bst-eq*
+	   :*cl-bst-gte*
+	   :cl-bst-set-cmp-funcs
 	   :bst-insert!-node
 	   :bst-delete!node
 	   :bst-delete-node
@@ -27,34 +31,61 @@
 
 (in-package :lolh.utils)
 
-(defparameter *cl-bst* ())
-(defparameter *cl-bst-data*
-  '(50 25 75 10 30 60 80 5 12 28 85 29))
+(defparameter *cl-bst* (make-bst-node)
+  "*cl-bst* is the root node and starts out empty.")
 
+(defparameter *cl-bst-data*
+  '(50 25 75 10 30 60 80 5 12 28 85 29)
+  "This is some sample data for testing.")
+
+;; Default comparison functions; these are for integer data..
 (defparameter *cl-bst-lt* #'<)
 (defparameter *cl-bst-gt* #'>)
 (defparameter *cl-bst-eq* #'=)
 (defparameter *cl-bst-gte* #'>=)
 
+(defun cl-bst-set-cmp-funcs (&key lt gt eq gte)
+  "Use this procedure to set comparison functions for different types
+of data structures."
+  (setf *cl-bst-lt* lt
+	*cl-bst-gt* gt
+	*cl-bst-eq* eq
+	*cl-bst-gte* gte))
+
 (defstruct bst-node
-  left data right)
+  left
+  data
+  right)
+
+(defun empty-bst-node (bst)
+  (and
+   (null (bst-node-left bst))
+   (null (bst-node-right bst))
+   (null (bst-node-data bst))))
 
 (defun bst-insert!-node (data bst)
   "This is a destructive procedure.  It cannot modify an initial
 nil value, however, so start with a non-nil initial bst-node."
-  (cond ((null bst)
-	 (setf bst (make-bst-node :data data)))
+  (cond ((empty-bst-node bst)
+	 (setf (bst-node-data bst) data))
 	((funcall *cl-bst-lt* data (bst-node-data bst))
 	 (setf (bst-node-left bst)
-	       (bst-insert!-node data (bst-node-left bst))))
+	       (bst-insert!-node data
+				 (if (bst-node-left bst)
+				     (bst-node-left bst)
+				     (make-bst-node)))))
 	((funcall *cl-bst-gte* data (bst-node-data bst))
 	 (setf (bst-node-right bst)
-	       (bst-insert!-node data (bst-node-right bst)))))
+	       (bst-insert!-node data
+				 (if (bst-node-right bst)
+				     (bst-node-right bst)
+				     (make-bst-node))))))
   bst)
 
 (defun bst-insert-nodes (data-list bst)
+  "This procedure inserts the test data into a BST."
   (dolist (data data-list bst)
-    (setf bst (bst-insert!-node data bst))))
+    (bst-insert!-node data bst)))
 
 (defun bst-delete!-node (data bst)
   "This is a destructive procedure."
@@ -253,6 +284,7 @@ specified data."
 		   (1+ left)
 		   (1+ right))))))
 
-(setf *cl-bst* (bst-insert-nodes *cl-bst-data* *cl-bst*))
+;(bst-insert-nodes *cl-bst-data* *cl-bst*)
+
 
 ;;; End cl-bst.lisp
