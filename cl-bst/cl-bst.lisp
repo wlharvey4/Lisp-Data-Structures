@@ -1,5 +1,5 @@
 ;;; cl-bst.lisp - Binary Search Tree procedures in Common Lisp
-;;; Time-stamp: <2023-01-15 01:44:16 wlh>
+;;; Time-stamp: <2023-01-15 07:37:13 wlh>
 
 ;;; Author: LOLH
 ;;; Created: 2023-01-14
@@ -33,6 +33,9 @@
 
 (defparameter *cl-bst* (make-bst-node)
   "*cl-bst* is the root node and starts out empty.")
+
+(defparameter *cl-bst-eqs* ()
+  "Add nodes that are equal here; later use this to delete them.")
 
 (defparameter *cl-bst-data*
   '(50 25 75 10 30 60 80 5 12 28 85 29)
@@ -74,12 +77,13 @@ nil value, however, so start with a non-nil initial bst-node."
 				 (if (bst-node-left bst)
 				     (bst-node-left bst)
 				     (make-bst-node)))))
-	((funcall *cl-bst-gte* data (bst-node-data bst))
+	((funcall *cl-bst-gt* data (bst-node-data bst))
 	 (setf (bst-node-right bst)
 	       (bst-insert!-node data
 				 (if (bst-node-right bst)
 				     (bst-node-right bst)
-				     (make-bst-node))))))
+				     (make-bst-node)))))
+	(t (setf *cl-bst-eqs* (cons bst *cl-bst-eqs))))
   bst)
 
 (defun bst-insert-nodes (data-list bst)
@@ -95,7 +99,7 @@ nil value, however, so start with a non-nil initial bst-node."
 	(cond ((funcall *cl-bst-lt* data (bst-node-data bst))
 	       (setf (bst-node-left bst)
 		(bst-delete!-node data (bst-node-left bst))))
-	      ((funcall *cl-bst-gte* data (bst-node-data bst))
+	      ((funcall *cl-bst-gt* data (bst-node-data bst))
 	       (setf (bst-node-right bst)
 		(bst-delete!-node data (bst-node-right bst))))
 	      (t ; this is the node to delete
