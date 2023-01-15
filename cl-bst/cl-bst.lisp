@@ -1,9 +1,9 @@
 ;;; cl-bst.lisp - Binary Search Tree procedures in Common Lisp
-;;; Time-stamp: <2023-01-15 08:03:47 wlh>
+;;; Time-stamp: <2023-01-15 12:51:34 wlh>
 
 ;;; Author: LOLH
 ;;; Created: 2023-01-14
-;;; Version: 0.1.2
+;;; Version: 0.1.3
 
 ;;; Commentary
 
@@ -277,16 +277,32 @@ specified data."
        (bst-size (bst-node-right bst)))))
 
 (defun bst-height (bst)
-  (let ((left 0)
-	(right 0))
-    (if (null bst)
-	0
-	(progn (setf left (bst-height (bst-node-left bst)))
-	       (setf right (bst-height (bst-node-right bst)))
-	       (if (funcall *cl-bst-lt* left right)
-		   (1+ left)
-		   (1+ right))))))
+  "The height of a node in a binary tree is the largest number of edges
+in a path from a leaf node to a target node. If the target node
+doesn’t have any other nodes connected to it, the height of that node
+would be \mathsf{0}.  That is, the height of the empty tree is
+zero. The height of a binary tree is the height of the root node in
+the whole binary tree. In other words, the height of a binary tree is
+equal to the largest number of edges from the root to the most distant
+leaf node."
+  (if (empty-bst-node bst)
+      0
+      (let ((left (bst-height (if (bst-node-left bst)
+				  (bst-node-left bst)
+				  (make-bst-node))))
+	    (right (bst-height (if (bst-node-right bst)
+				   (bst-node-right bst)
+				   (make-bst-node)))))
+	(1+ (max left right)))))
 
-;(lolh.utils::bst-insert-nodes lolh.utils::*cl-bst-data* lolh.utils:*cl-bst*)
+;; (defun bst-node-depth (bst target)
+;;   "The depth of a node in a binary tree is the total number of edges from
+;; the root node to the target node. Similarly, the depth of a binary
+;; tree is the total number of edges from the root node to the most
+;; distant leaf node."
+;;   nil)
+
+;; (lolh.utils::bst-insert-nodes lolh.utils::*cl-bst-data* lolh.utils:*cl-bst*)
+
 
 ;;; End cl-bst.lisp
