@@ -1,5 +1,5 @@
 ;;; cl-bst.lisp - Binary Search Tree procedures in Common Lisp
-;;; Time-stamp: <2023-01-15 07:37:13 wlh>
+;;; Time-stamp: <2023-01-15 07:58:37 wlh>
 
 ;;; Author: LOLH
 ;;; Created: 2023-01-14
@@ -12,6 +12,7 @@
 (defpackage :lolh.utils
   (:use :cl)
   (:export :*cl-bst*
+	   :*cl-bst-eqs*
 	   :*cl-bst-lt*
 	   :*cl-bst-gt*
 	   :*cl-bst-eq*
@@ -38,7 +39,7 @@
   "Add nodes that are equal here; later use this to delete them.")
 
 (defparameter *cl-bst-data*
-  '(50 25 75 10 30 60 80 5 12 28 85 29)
+  '(50 25 75 10 30 60 80 80 5 12 28 85 29 29)
   "This is some sample data for testing.")
 
 ;; Default comparison functions; these are for integer data..
@@ -83,7 +84,8 @@ nil value, however, so start with a non-nil initial bst-node."
 				 (if (bst-node-right bst)
 				     (bst-node-right bst)
 				     (make-bst-node)))))
-	(t (setf *cl-bst-eqs* (cons bst *cl-bst-eqs))))
+	(t (setf *cl-bst-eqs* (cons (bst-node-data bst) *cl-bst-eqs*))
+	   (break)))
   bst)
 
 (defun bst-insert-nodes (data-list bst)
@@ -288,7 +290,6 @@ specified data."
 		   (1+ left)
 		   (1+ right))))))
 
-;(bst-insert-nodes *cl-bst-data* *cl-bst*)
-
+;(lolh.utils::bst-insert-nodes lolh.utils::*cl-bst-data* lolh.utils:*cl-bst*)
 
 ;;; End cl-bst.lisp
