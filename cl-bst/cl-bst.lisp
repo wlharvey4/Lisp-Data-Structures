@@ -1,5 +1,5 @@
 ;;; cl-bst.lisp - Binary Search Tree procedures in Common Lisp
-;;; Time-stamp: <2023-01-15 07:58:37 wlh>
+;;; Time-stamp: <2023-01-15 08:03:47 wlh>
 
 ;;; Author: LOLH
 ;;; Created: 2023-01-14
@@ -16,7 +16,6 @@
 	   :*cl-bst-lt*
 	   :*cl-bst-gt*
 	   :*cl-bst-eq*
-	   :*cl-bst-gte*
 	   :cl-bst-set-cmp-funcs
 	   :bst-insert!-node
 	   :bst-delete!node
@@ -46,15 +45,13 @@
 (defparameter *cl-bst-lt* #'<)
 (defparameter *cl-bst-gt* #'>)
 (defparameter *cl-bst-eq* #'=)
-(defparameter *cl-bst-gte* #'>=)
 
-(defun cl-bst-set-cmp-funcs (&key lt gt eq gte)
+(defun cl-bst-set-cmp-funcs (&key lt gt eq)
   "Use this procedure to set comparison functions for different types
 of data structures."
   (setf *cl-bst-lt* lt
 	*cl-bst-gt* gt
-	*cl-bst-eq* eq
-	*cl-bst-gte* gte))
+	*cl-bst-eq* eq))
 
 (defstruct bst-node
   left
