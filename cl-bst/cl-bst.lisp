@@ -1,9 +1,9 @@
 ;;; cl-bst.lisp - Binary Search Tree procedures in Common Lisp
-;;; Time-stamp: <2023-01-14 13:18:04 wlh>
+;;; Time-stamp: <2023-01-14 17:05:31 minilolh3>
 
 ;;; Author: LOLH
 ;;; Created: 2023-01-14
-;;; Version: 0.1.0
+;;; Version: 0.1.1
 
 ;;; Commentary
 
@@ -12,6 +12,7 @@
 (defpackage :lolh.utils
   (:use :cl)
   (:export :*cl-bst*
+	   :*cl-bst-lt*
 	   :bst-insert!-node
 	   :bst-delete!node
 	   :bst-delete-node
@@ -30,6 +31,11 @@
 (defparameter *cl-bst-data*
   '(50 25 75 10 30 60 80 5 12 28 85 29))
 
+(defparameter *cl-bst-lt* #'<)
+(defparameter *cl-bst-gt* #'>)
+(defparameter *cl-bst-eq* #'=)
+(defparameter *cl-bst-gte* #'>=)
+
 (defstruct bst-node
   left data right)
 
@@ -38,10 +44,10 @@
 nil value, however, so start with a non-nil initial bst-node."
   (cond ((null bst)
 	 (setf bst (make-bst-node :data data)))
-	((< data (bst-node-data bst))
+	((funcall *cl-bst-lt* data (bst-node-data bst))
 	 (setf (bst-node-left bst)
 	       (bst-insert!-node data (bst-node-left bst))))
-	((> data (bst-node-data bst))
+	((funcall *cl-bst-gte* data (bst-node-data bst))
 	 (setf (bst-node-right bst)
 	       (bst-insert!-node data (bst-node-right bst)))))
   bst)
@@ -55,10 +61,10 @@ nil value, however, so start with a non-nil initial bst-node."
   (if (null bst)
       (format t "The data item ~D is not in this tree.~%" data)
       (progn
-	(cond ((< data (bst-node-data bst))
+	(cond ((funcall *cl-bst-lt* data (bst-node-data bst))
 	       (setf (bst-node-left bst)
 		(bst-delete!-node data (bst-node-left bst))))
-	      ((> data (bst-node-data bst))
+	      ((funcall *cl-bst-gte* data (bst-node-data bst))
 	       (setf (bst-node-right bst)
 		(bst-delete!-node data (bst-node-right bst))))
 	      (t ; this is the node to delete
@@ -88,13 +94,13 @@ specified data."
     (format t "The data item ~D is not in this tree.~%" data)
     (return-from bst-delete-node))
   ;; Search for the node with the data
-  (cond ((< data (bst-node-data bst))
+  (cond ((funcall *cl-bst-lt* data (bst-node-data bst))
 	 ;; keep searching left
 	 (make-bst-node
 	  :data (bst-node-data bst)
 	  :left (bst-delete-node data (bst-node-left bst))
 	  :right (bst-node-right bst)))
-	((> data (bst-node-data bst))
+	((funcall *cl-bst-gt* data (bst-node-data bst))
 	 ;; keep searching right
 	 (make-bst-node
 	  :data (bst-node-data bst)
@@ -212,8 +218,8 @@ specified data."
     (let ((d (bst-node-data bst))
 	  (l (bst-node-left bst))
 	  (r (bst-node-right bst)))
-      (cond ((< data d)(bst-find-node data l))
-	    ((> data d)(bst-find-node data r))
+      (cond ((funcall *cl-bst-lt* data d)(bst-find-node data l))
+	    ((funcall *cl-bst-gt* data d)(bst-find-node data r))
 	    (t bst)))))
 
 (defun bst-min (bst)
@@ -243,7 +249,7 @@ specified data."
 	0
 	(progn (setf left (bst-height (bst-node-left bst)))
 	       (setf right (bst-height (bst-node-right bst)))
-	       (if (> left right)
+	       (if (funcall *cl-bst-lt* left right)
 		   (1+ left)
 		   (1+ right))))))
 
