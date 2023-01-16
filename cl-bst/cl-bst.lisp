@@ -1,5 +1,5 @@
 ;;; cl-bst.lisp - Binary Search Tree procedures in Common Lisp
-;;; Time-stamp: <2023-01-15 12:51:34 wlh>
+;;; Time-stamp: <2023-01-15 16:06:45 wlh>
 
 ;;; Author: LOLH
 ;;; Created: 2023-01-14
@@ -157,75 +157,6 @@ specified data."
 		   ((null (bst-node-right bst))
 		    (bst-node-left bst))
 		   (t nil))))))
-
-
-;; (defun bst-delete-node (data bst)
-;;   "Procedure to delete a node:
-;; 1. Find the node to be deleted, and retain a reference to the
-;;    parent node as a left or right.
-;; 2. If the node to be deleted is a leaf node (no children), set
-;;    parent left or right node to null.
-;; 3. If the node to be deleted has only one child, set the parent
-;;    left or right node to this child; null the node to be deleted.
-;; 4. IF the node to be deleted has two children, find and use the
-;;    highest subtree.
-;;    a. If the highest subtree is on the left, find the max value
-;;       and replace the data of the node to be deleted with it; then
-;;       recursively delete that max value.
-;;    b. If the highest subtree is on the right, find the min value
-;;       and replace the date of the node to be deleted with it; then
-;;       recursively delete the min value."
-;;   (labels ((find-node-with-parent (d tr)
-;;	     "Returns a list, the first value being the parent and the
-;;            second value being the node to be deleted."
-;; 	     (when (null tr)
-;; 	       (format t "The data item ~D was not found in the search
-;;              tree.~%" d)
-;; 	       (return-from bst-delete-node))
-;; 	     (let* ((tr-l (bst-node-left tr))
-;; 		    (tr-r (bst-node-right tr))
-;; 		    (d-l (and tr-l (bst-node-data tr-l)))
-;; 		    (d-r (and tr-r (bst-node-data tr-r)))
-;; 		    (d-tr (bst-node-data tr)))
-;; 	       (cond ((eql d d-l) (values tr tr-l "left"))
-;; 		     ((eql d d-r) (values tr tr-r "right"))
-;; 		     (t (find-node-with-parent d
-;; 					       (if (< d d-tr)
-;; 						   tr-l
-;; 						   tr-r)))))))
-;;     (multiple-value-bind (parent node side) (find-node-with-parent data bst)
-;;       (let ((num-children (+ (if (bst-node-left node)
-;; 				 1 0)
-;; 			     (if (bst-node-right node)
-;; 				 1 0))))
-;; 	(case num-children
-;; 	  (0
-;; 	   (case side
-;; 	     ("left" (setf (bst-node-left parent) nil) *cl-bst*)
-;; 	     ("right"(setf (bst-node-right parent) nil) *cl-bst*)))
-;; 	  (1
-;; 	   (case side
-;; 	     ("left"
-;; 	      (setf (bst-node-left parent) (or (bst-node-left node)
-;; 					       (bst-node-right node))))
-;; 	     ("right"
-;; 	      (setf (bst-node-right parent) (or (bst-node-left node)
-;; 						(bst-node-right node))))))
-;; 	  (2
-;; 	   (let ((l-height (bst-height (bst-node-left node)))
-;; 		 (r-height (bst-height (bst-node-right node))))
-;; 	     (if (> l-height r-height)
-;; 		 (progn
-;; 		   (let* ((max-child (bst-max (bst-node-left node)))
-;; 			  (max-child-data (bst-node-data max-child)))
-;; 		     (bst-delete-node max-child-data node)
-;; 		     (setf (bst-node-data node) max-child-data)))
-;; 		 (progn
-;; 		   (let* ((min-child (bst-min (bst-node-right node)))
-;; 			  (min-child-data (bst-node-data min-child)))
-;; 		     (bst-delete-node min-child-data node)
-;; 		     (setf (bst-node-data node) min-child-data))))))))))
-;;   bst)
 
 (defun bst-inorder-traversal (bst)
   (when bst
